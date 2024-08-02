@@ -1,0 +1,3 @@
+# DOCUMENTATION
+
+pnpm - Package manager
