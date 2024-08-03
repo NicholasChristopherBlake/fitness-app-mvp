@@ -1,12 +1,27 @@
-import express from 'express';
+import express, { Application } from "express";
+// import pool from "./config/db"; // Import the connection pool
+import dotenv from "dotenv";
+import userRoutes from "./routes/userRoutes";
 
-const app = express();
-const port = 3000;
+// Load environment variables
+dotenv.config();
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
+// Create an instance of Express
+const app: Application = express();
+const PORT = process.env.PORT || 3000;
+
+// Middleware for parsing JSON
+app.use(express.json());
+
+// Use the user routes
+app.use("/api", userRoutes);
+
+// Basic route
+app.get("/", (req, res) => {
+  res.send("Welcome to the Fitness Diary API!");
 });
 
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}/`);
+// Start server
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
