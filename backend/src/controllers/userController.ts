@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import pool from "../config/db";
+import UserModel from "../models/userModel";
 
 class UserController {
   // Create a new user
@@ -7,11 +7,8 @@ class UserController {
     const { username, email, password_hash } = req.body;
 
     try {
-      const result = await pool.query(
-        "INSERT INTO users (username, email, password_hash) VALUES ($1, $2, $3) RETURNING *",
-        [username, email, password_hash]
-      );
-      res.status(201).json(result.rows[0]);
+      const user = await UserModel.createUser(username, email, password_hash);
+      res.status(201).json(user);
     } catch (error) {
       res
         .status(500)
@@ -22,8 +19,8 @@ class UserController {
   // Get all users
   async getAllUsers(req: Request, res: Response): Promise<void> {
     try {
-      const result = await pool.query("SELECT * FROM users");
-      res.status(200).json(result.rows);
+      const users = await UserModel.getAllUsers();
+      res.status(200).json(users);
     } catch (error) {
       res.status(500).json({ error: "An error occurred while fetching users" });
     }
@@ -34,11 +31,7 @@ class UserController {
     const userId = parseInt(req.params.id);
 
     try {
-      const result = await pool.query(
-        "SELECT * FROM users WHERE user_id = $1",
-        [userId]
-      );
-      const user = result.rows[0];
+      const user = await UserModel.getUserById(userId);
 
       if (!user) {
         res.status(404).json({ error: "User not found" });
@@ -59,11 +52,12 @@ class UserController {
     const { username, email, password_hash } = req.body;
 
     try {
-      const result = await pool.query(
-        "UPDATE users SET username = $1, email = $2, password_hash = $3 WHERE user_id = $4 RETURNING *",
-        [username, email, password_hash, userId]
+      const user = await UserModel.updateUser(
+        userId,
+        username,
+        email,
+        password_hash
       );
-      const user = result.rows[0];
 
       if (!user) {
         res.status(404).json({ error: "User not found" });
@@ -83,11 +77,7 @@ class UserController {
     const userId = parseInt(req.params.id);
 
     try {
-      const result = await pool.query(
-        "DELETE FROM users WHERE user_id = $1 RETURNING *",
-        [userId]
-      );
-      const user = result.rows[0];
+      const user = await UserModel.deleteUser(userId);
 
       if (!user) {
         res.status(404).json({ error: "User not found" });

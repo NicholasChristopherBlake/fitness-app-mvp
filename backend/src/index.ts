@@ -8,7 +8,7 @@ dotenv.config();
 
 // Create an instance of Express
 const app: Application = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 
 // Middleware for parsing JSON
 app.use(express.json());
