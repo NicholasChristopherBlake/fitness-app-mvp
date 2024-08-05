@@ -4,7 +4,7 @@ class UserModel {
   // Create a new user
   async createUser(username: string, email: string, password_hash: string) {
     const result = await pool.query(
-      "INSERT INTO users (username, email, password_hash) VALUES ($1, $2, $3) RETURNING *",
+      "INSERT INTO users (username, email, password_hash) VALUES ($1, $2, $3, $4) RETURNING *",
       [username, email, password_hash]
     );
     return result.rows[0];

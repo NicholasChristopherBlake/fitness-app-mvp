@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import UserModel from "../models/userModel";
+import UserService from "../services/userService";
 
 class UserController {
   // Create a new user
@@ -7,7 +7,7 @@ class UserController {
     const { username, email, password_hash } = req.body;
 
     try {
-      const user = await UserModel.createUser(username, email, password_hash);
+      const user = await UserService.createUser(username, email, password_hash);
       res.status(201).json(user);
     } catch (error) {
       res
@@ -19,7 +19,7 @@ class UserController {
   // Get all users
   async getAllUsers(req: Request, res: Response): Promise<void> {
     try {
-      const users = await UserModel.getAllUsers();
+      const users = await UserService.getAllUsers();
       res.status(200).json(users);
     } catch (error) {
       res.status(500).json({ error: "An error occurred while fetching users" });
@@ -31,7 +31,7 @@ class UserController {
     const userId = parseInt(req.params.id);
 
     try {
-      const user = await UserModel.getUserById(userId);
+      const user = await UserService.getUserById(userId);
 
       if (!user) {
         res.status(404).json({ error: "User not found" });
@@ -52,7 +52,7 @@ class UserController {
     const { username, email, password_hash } = req.body;
 
     try {
-      const user = await UserModel.updateUser(
+      const user = await UserService.updateUser(
         userId,
         username,
         email,
@@ -77,7 +77,7 @@ class UserController {
     const userId = parseInt(req.params.id);
 
     try {
-      const user = await UserModel.deleteUser(userId);
+      const user = await UserService.deleteUser(userId);
 
       if (!user) {
         res.status(404).json({ error: "User not found" });

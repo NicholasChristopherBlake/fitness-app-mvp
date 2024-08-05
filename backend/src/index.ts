@@ -1,5 +1,6 @@
 import express, { Application } from "express";
-// import pool from "./config/db"; // Import the connection pool
+import cors from "cors";
+import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import userRoutes from "./routes/userRoutes";
 
@@ -10,18 +11,30 @@ dotenv.config();
 const app: Application = express();
 const PORT = process.env.PORT || 4000;
 
-// Middleware for parsing JSON
-app.use(express.json());
+// Configure CORS
+app.use(
+  cors({
+    origin: "http://localhost:3000", // Allow requests from this origin
+    credentials: true, // Allow cookies and HTTP authentication
+  })
+);
 
-// Use the user routes
+// Middlewares
+app.use(express.json()); // parsing JSON
+// app.use(cookieParser());
+
+// Routes
 app.use("/api", userRoutes);
 
-// Basic route
-app.get("/", (req, res) => {
-  res.send("Welcome to the Fitness Diary API!");
-});
-
 // Start server
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+const start = async () => {
+  try {
+    app.listen(PORT, () => {
+      console.log(`Server is running on http://localhost:${PORT}`);
+    });
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+start();
