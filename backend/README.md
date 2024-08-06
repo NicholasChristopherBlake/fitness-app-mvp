@@ -3,6 +3,10 @@
 Backend PORT = 4000
 Frontend PORT = 3000
 
+## Naming
+
+For DB tables/columns - snake_case
+
 ## Packages
 
 pnpm - Package manager

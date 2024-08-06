@@ -3,6 +3,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import userRoutes from "./routes/userRoutes";
+import authRoutes from "./routes/authRoutes";
 
 // Load environment variables
 dotenv.config();
@@ -21,10 +22,11 @@ app.use(
 
 // Middlewares
 app.use(express.json()); // parsing JSON
-// app.use(cookieParser());
+app.use(cookieParser());
 
 // Routes
 app.use("/api", userRoutes);
+app.use("/api/auth", authRoutes);
 
 // Start server
 const start = async () => {
