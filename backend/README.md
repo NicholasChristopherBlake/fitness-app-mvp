@@ -3,6 +3,9 @@
 Backend PORT = 4000
 Frontend PORT = 3000
 
+// TODO - what needs to be done
+// QUESTION - some questions I need to figure out
+
 ## Naming
 
 For DB tables/columns - snake_case

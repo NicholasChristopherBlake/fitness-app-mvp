@@ -3,18 +3,18 @@ import UserService from "../services/userService";
 
 class UserController {
   // Create a new user
-  async createUser(req: Request, res: Response): Promise<void> {
-    const { username, email, password_hash } = req.body;
+  // async createUser(req: Request, res: Response): Promise<void> {
+  //   const { username, email, password_hash } = req.body;
 
-    try {
-      const user = await UserService.createUser(username, email, password_hash);
-      res.status(201).json(user);
-    } catch (error) {
-      res
-        .status(500)
-        .json({ error: "An error occurred while creating the user" });
-    }
-  }
+  //   try {
+  //     const user = await UserService.createUser(username, email, password_hash);
+  //     res.status(201).json(user);
+  //   } catch (error) {
+  //     res
+  //       .status(500)
+  //       .json({ error: "An error occurred while creating the user" });
+  //   }
+  // }
 
   // Get all users
   async getAllUsers(req: Request, res: Response): Promise<void> {

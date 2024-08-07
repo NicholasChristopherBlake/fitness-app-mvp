@@ -1,8 +1,18 @@
 import UserModel from "../models/userModel";
 
 class UserService {
-  async createUser(username: string, email: string, password_hash: string) {
-    return UserModel.createUser(username, email, password_hash);
+  async createUser(
+    username: string,
+    email: string,
+    password_hash: string,
+    activation_link: string
+  ) {
+    return UserModel.createUser(
+      username,
+      email,
+      password_hash,
+      activation_link
+    );
   }
 
   async getAllUsers() {
