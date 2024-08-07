@@ -1,5 +1,5 @@
-import { UserDTO } from "../dtos/user.dto";
-import TokenModel from "../models/tokenModel";
+import { UserDTO } from "../dtos/User.dto";
+import TokenModel from "../models/TokenModel";
 import jwt from "jsonwebtoken";
 
 const JWT_ACCESS_SECRET =

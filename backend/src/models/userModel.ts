@@ -4,7 +4,7 @@ import { User } from "../types/User";
 class UserModel {
   // Get user by username
   async getUserByUsername(username: string): Promise<User | null> {
-    const result = await pool.query("SELECT 1 FROM users WHERE username = $1", [
+    const result = await pool.query("SELECT * FROM users WHERE username = $1", [
       username,
     ]);
     return result.rows[0] as User | null;
@@ -12,9 +12,18 @@ class UserModel {
 
   // Get user by email
   async getUserByEmail(email: string): Promise<User | null> {
-    const result = await pool.query("SELECT 1 FROM users WHERE email = $1", [
+    const result = await pool.query("SELECT * FROM users WHERE email = $1", [
       email,
     ]);
+    return result.rows[0] as User | null;
+  }
+
+  // Get user by activation link
+  async getUserByActivationLink(activation_link: string): Promise<User | null> {
+    const result = await pool.query(
+      "SELECT * FROM users WHERE activation_link = $1",
+      [activation_link]
+    );
     return result.rows[0] as User | null;
   }
 
@@ -30,6 +39,15 @@ class UserModel {
       [username, email, password_hash, activation_link]
     );
     return result.rows[0] as User;
+  }
+
+  // Activate user
+  async activateUser(userId: number): Promise<User | null> {
+    const result = await pool.query(
+      "UPDATE users SET is_activated = TRUE, activation_link = NULL WHERE user_id = $1 RETURNING *",
+      [userId]
+    );
+    return result.rows[0] as User | null;
   }
 
   // Get all users

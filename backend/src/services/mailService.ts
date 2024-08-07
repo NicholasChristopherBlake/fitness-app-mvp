@@ -6,11 +6,15 @@ const transporter = nodemailer.createTransport({
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASSWORD,
   },
-  secure: false, // TODO check this property later
+  secure: true, // Use SSL/TLS
+  port: 465, // Port for SSL/TLS
 });
 
 class MailService {
   async sendActivationEmail(to: string, activation_link: string) {
+    // Add domain to activation link
+    const full_activation_link = `${process.env.API_BASE_URL}/api/auth/activate/${activation_link}`;
+
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to,
@@ -19,7 +23,7 @@ class MailService {
       html: `
           <div>
             <h1>Please activate your account by clicking the following link:</h1>
-            <a href="${activation_link}">${activation_link}</a>
+            <a href="${full_activation_link}">${full_activation_link}</a>
           </div>
         `,
     };

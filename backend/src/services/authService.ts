@@ -1,9 +1,10 @@
-import UserModel from "../models/userModel";
+import UserModel from "../models/UserModel";
 import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid"; // Correct import for v4
-import MailService from "./mailService";
-import TokenService from "./tokenService";
-import { UserDTO, UserWithTokensDTO } from "../dtos/user.dto";
+import MailService from "./MailService";
+import TokenService from "./TokenService";
+import { UserDTO, UserWithTokensDTO } from "../dtos/User.dto";
+import { User } from "../types/User";
 
 class AuthService {
   // Register new user
@@ -26,8 +27,7 @@ class AuthService {
     const password_hash = await bcrypt.hash(password, 7);
 
     // Create activation link
-    const activation_uuid = uuidv4();
-    const activation_link = `${process.env.APP_BASE_URL}/api/auth/activate/${activation_uuid}`;
+    const activation_link = uuidv4();
 
     // Create the new user
     const user = await UserModel.createUser(
@@ -54,6 +54,20 @@ class AuthService {
       ...tokens,
       ...userDTO,
     };
+  }
+
+  // Activate user with activation link
+  async activate(activation_link: string): Promise<User | null> {
+    const user = await UserModel.getUserByActivationLink(activation_link);
+    console.log(user);
+    if (!user) {
+      throw new Error("Activation link is invalid or user does not exist.");
+    }
+    // Set is_activated to true
+    const activatedUser = await UserModel.activateUser(user.user_id);
+    console.log(activatedUser);
+
+    return activatedUser;
   }
 }
 

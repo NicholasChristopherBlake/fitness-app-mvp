@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import UserService from "../services/authService";
-import { UserWithTokensDTO } from "../dtos/user.dto";
+import AuthService from "../services/AuthService";
+import { UserWithTokensDTO } from "../dtos/User.dto";
 
 class AuthController {
   // Register a new user
@@ -13,7 +13,7 @@ class AuthController {
         return res.status(400).json({ message: "All fields are required" });
       }
       // Register new user
-      const userData: UserWithTokensDTO | null = await UserService.register(
+      const userData: UserWithTokensDTO | null = await AuthService.register(
         username,
         email,
         password
@@ -54,9 +54,24 @@ class AuthController {
   }
 
   // Activate account using activation link
-  async activate(req: Request, res: Response) {
+  async activate(req: Request, res: Response): Promise<void> {
     try {
-    } catch (e) {}
+      const activation_link = req.params.link; // from dynamic parameter in authRoutes
+      if (!activation_link) {
+        res.status(400).json({ message: "Activation link is required" });
+        return;
+      }
+      const user = await AuthService.activate(activation_link);
+      if (!user) {
+        res.status(404).json({ message: "Invalid activation link" });
+        return;
+      }
+      // default URL if env undefined
+      return res.redirect(process.env.APP_BASE_URL ?? "http://localhost:3000");
+    } catch (error) {
+      console.error("Error during activation:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
   }
 
   // Refresh access token
