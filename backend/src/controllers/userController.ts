@@ -1,5 +1,6 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import UserService from "../services/UserService";
+import { ApiError } from "../exceptions/ApiError";
 
 class UserController {
   // Create a new user
@@ -17,12 +18,20 @@ class UserController {
   // }
 
   // Get all users
-  async getAllUsers(req: Request, res: Response): Promise<void> {
+  async getAllUsers(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const users = await UserService.getAllUsers();
       res.status(200).json(users);
     } catch (error) {
-      res.status(500).json({ error: "An error occurred while fetching users" });
+      if (error instanceof Error) {
+        next(ApiError.internal(error.message));
+      } else {
+        next(ApiError.internal("An unexpected error occurred"));
+      }
     }
   }
 

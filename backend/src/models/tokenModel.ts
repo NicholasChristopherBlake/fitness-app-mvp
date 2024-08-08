@@ -23,11 +23,30 @@ class TokenModel {
     return result.rows[0]?.refresh_token || null;
   }
 
+  // Get the refresh token by user ID
+  async getRefreshTokenByTokenValue(
+    refresh_token: string
+  ): Promise<string | null> {
+    const result = await pool.query(
+      "SELECT refresh_token FROM users_refresh_tokens WHERE refresh_token = $1",
+      [refresh_token]
+    );
+    return result.rows[0]?.refresh_token || null;
+  }
+
   // Delete the refresh token by user ID
-  async deleteRefreshToken(userId: number): Promise<void> {
+  async deleteRefreshTokenByUserId(userId: number): Promise<void> {
     await pool.query("DELETE FROM users_refresh_tokens WHERE user_id = $1", [
       userId,
     ]);
+  }
+
+  // Delete the refresh token by refresh_token field
+  async deleteRefreshTokenByTokenValue(refresh_token: string): Promise<void> {
+    await pool.query(
+      "DELETE FROM users_refresh_tokens WHERE refresh_token = $1",
+      [refresh_token]
+    );
   }
 }
 

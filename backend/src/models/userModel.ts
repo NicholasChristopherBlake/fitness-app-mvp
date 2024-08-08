@@ -18,6 +18,17 @@ class UserModel {
     return result.rows[0] as User | null;
   }
 
+  // Get user by username or email
+  async getUserByUsernameOrEmail(
+    usernameOrEmail: string
+  ): Promise<User | null> {
+    const result = await pool.query(
+      "SELECT * FROM users WHERE username = $1 OR email = $2",
+      [usernameOrEmail, usernameOrEmail]
+    );
+    return result.rows[0] as User | null;
+  }
+
   // Get user by activation link
   async getUserByActivationLink(activation_link: string): Promise<User | null> {
     const result = await pool.query(

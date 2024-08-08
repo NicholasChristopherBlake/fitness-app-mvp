@@ -1,33 +1,39 @@
-// export class ApiError extends Error {
-//   status: number;
-//   message: string;
+export class ApiError extends Error {
+  statusCode: number;
+  errors: string[];
+  message: string;
 
-//   constructor(status: number, message: string) {
-//     super(message);
-//     this.status = status;
-//     this.message = message;
+  constructor(statusCode: number, message: string, errors: string[] = []) {
+    super(message);
+    this.statusCode = statusCode;
+    this.errors = errors;
+    this.message = message;
 
-//     // Set the prototype explicitly for extending built-in classes
-//     Object.setPrototypeOf(this, ApiError.prototype);
-//   }
+    // Set the prototype explicitly for extending built-in classes
+    Object.setPrototypeOf(this, ApiError.prototype);
+  }
 
-//   static badRequest(message: string) {
-//     return new ApiError(400, message);
-//   }
+  static badRequest(message: string, errors: string[] = []): ApiError {
+    return new ApiError(400, message, errors);
+  }
 
-//   static unauthorized(message: string) {
-//     return new ApiError(401, message);
-//   }
+  static unauthorizedError(): ApiError {
+    return new ApiError(401, "User is unauthorized");
+  }
 
-//   static forbidden(message: string) {
-//     return new ApiError(403, message);
-//   }
+  static forbidden(message: string, errors: string[] = []): ApiError {
+    return new ApiError(403, message, errors);
+  }
 
-//   static notFound(message: string) {
-//     return new ApiError(404, message);
-//   }
+  static notFound(message: string, errors: string[] = []): ApiError {
+    return new ApiError(404, message, errors);
+  }
 
-//   static internal(message: string) {
-//     return new ApiError(500, message);
-//   }
-// }
+  static conflict(message: string, errors: string[] = []): ApiError {
+    return new ApiError(409, message, errors);
+  }
+
+  static internal(message: string, errors: string[] = []): ApiError {
+    return new ApiError(500, message, errors);
+  }
+}

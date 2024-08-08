@@ -1,10 +1,18 @@
 import express from "express";
 import UserController from "../controllers/UserController";
+import { authenticate, authorize } from "../middlewares/authMiddleware";
 
 const router = express.Router();
 
+// router.use(authenticate); // if we want to apply authenticate to all routes in this file
+
 // Get all users
-router.get("/users", UserController.getAllUsers);
+router.get(
+  "/users",
+  authenticate,
+  authorize("admin"),
+  UserController.getAllUsers
+);
 
 // Get a specific user by ID
 router.get("/users/:id", UserController.getUserById);

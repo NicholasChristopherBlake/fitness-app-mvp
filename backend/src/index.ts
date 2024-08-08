@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import userRoutes from "./routes/userRoutes";
 import authRoutes from "./routes/authRoutes";
+import { errorMiddleware } from "./middlewares/errorMiddleware";
 
 // Load environment variables
 dotenv.config();
@@ -27,6 +28,9 @@ app.use(cookieParser());
 // Routes
 app.use("/api", userRoutes);
 app.use("/api/auth", authRoutes);
+
+// Error middleware must be last middleware
+app.use(errorMiddleware);
 
 // Start server
 const start = async () => {
